@@ -1,7 +1,56 @@
 import { NextResponse } from 'next/server';
-import { UnifiedWorkspaceContext } from '@/types/normalizer';
+import { UnifiedWorkspaceContext, NormalizedItem } from '@/types/normalizer';
 
 export async function GET(request: Request) {
+  if (process.env.USE_LIVE_DATA === 'true') {
+    // ── LIVE MODE ──────────────────────────────────────────────────────────
+    const { fetchGitHubData } = await import('@/integrations/github/client');
+
+    let githubItems: NormalizedItem[] = [];
+    try {
+      githubItems = await fetchGitHubData();
+    } catch (err) {
+      console.error('GitHub fetch failed:', err);
+    }
+
+    // Notion and Calendar still mocked until Days 4-6
+    const mockNotionAndCalendar: NormalizedItem[] = [
+      {
+        id: 'notion-303',
+        source: 'notion',
+        type: 'task',
+        title: 'Sign-off on Q3 Architecture Roadmap',
+        status: 'pending_approval',
+        updatedAt: new Date().toISOString(),
+        url: 'https://notion.so/org/q3-roadmap',
+        assignees: ['bob_pm'],
+        metadata: { parentProject: 'Core Infrastructure' }
+      },
+      {
+        id: 'calendar-505',
+        source: 'calendar',
+        type: 'event',
+        title: 'Urgent QA Defect Review Sync',
+        status: 'scheduled',
+        updatedAt: new Date().toISOString(),
+        url: 'https://calendar.google.com/event?id=505',
+        assignees: ['jane_doe', 'qa_team'],
+        metadata: {
+          startTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+          endTime: new Date(Date.now() + 90 * 60 * 1000).toISOString()
+        }
+      }
+    ];
+
+    const context: UnifiedWorkspaceContext = {
+      timestamp: new Date().toISOString(),
+      items: [...githubItems, ...mockNotionAndCalendar]
+    };
+
+    return NextResponse.json(context);
+  }
+
+  // ── MOCK MODE (default) ───────────────────────────────────────────────────
   const mockContext: UnifiedWorkspaceContext = {
     timestamp: new Date().toISOString(),
     items: [
