@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts"
+    "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts",
+    "test:orchestrator": "ts-node --project tsconfig.tsnode.json tests/orchestrator.test.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
