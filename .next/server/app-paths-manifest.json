@@ -1,3 +1,4 @@
 {
+  "/api/gravity/search/route": "app/api/gravity/search/route.js",
   "/api/gravity/context/route": "app/api/gravity/context/route.js"
 }

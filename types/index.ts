@@ -557,3 +557,26 @@ export interface GravityResponse<T = unknown> {
     requestedAt: string;
   };
 }
+
+// ---------------------------------------------------------------------------
+// UnifiedWorkspaceContext
+// ---------------------------------------------------------------------------
+
+/**
+ * A point-in-time snapshot of raw workspace items collected from all
+ * connected integrations before they enter the intelligence pipeline.
+ *
+ * This is the input envelope that integration adapters produce and that
+ * the intelligence layer consumes. Items here have not yet been ranked,
+ * scored, or conflict-checked.
+ */
+export interface UnifiedWorkspaceContext {
+  /** ISO 8601 UTC timestamp when this snapshot was assembled. */
+  timestamp: string;
+
+  /**
+   * Raw workspace items from every connected integration.
+   * Each item must conform to the canonical `WorkspaceItem` contract.
+   */
+  items: WorkspaceItem[];
+}
