@@ -2,19 +2,20 @@ import { NextResponse } from 'next/server';
 import { UnifiedWorkspaceContext, NormalizedItem } from '@/types/normalizer';
 
 export async function GET(request: Request) {
+
+  // ── LIVE MODE ─────────────────────────────────────────────────────────────
   if (process.env.USE_LIVE_DATA === 'true') {
-    // ── LIVE MODE ──────────────────────────────────────────────────────────
-    const { fetchGitHubData } = await import('@/integrations/github/client');
+    const { fetchGitHubData }   = await import('@/integrations/github/client');
+    const { fetchCalendarData } = await import('@/integrations/calendar/client');
 
-    let githubItems: NormalizedItem[] = [];
-    try {
-      githubItems = await fetchGitHubData();
-    } catch (err) {
-      console.error('GitHub fetch failed:', err);
-    }
+    let githubItems: NormalizedItem[]   = [];
+    let calendarItems: NormalizedItem[] = [];
 
-    // Notion and Calendar still mocked until Days 4-6
-    const mockNotionAndCalendar: NormalizedItem[] = [
+    try { githubItems   = await fetchGitHubData();   } catch (err) { console.error('GitHub failed:', err); }
+    try { calendarItems = await fetchCalendarData(); } catch (err) { console.error('Calendar failed:', err); }
+
+    // Notion still mocked until Day 6
+    const mockNotion: NormalizedItem[] = [
       {
         id: 'notion-303',
         source: 'notion',
@@ -25,29 +26,13 @@ export async function GET(request: Request) {
         url: 'https://notion.so/org/q3-roadmap',
         assignees: ['bob_pm'],
         metadata: { parentProject: 'Core Infrastructure' }
-      },
-      {
-        id: 'calendar-505',
-        source: 'calendar',
-        type: 'event',
-        title: 'Urgent QA Defect Review Sync',
-        status: 'scheduled',
-        updatedAt: new Date().toISOString(),
-        url: 'https://calendar.google.com/event?id=505',
-        assignees: ['jane_doe', 'qa_team'],
-        metadata: {
-          startTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-          endTime: new Date(Date.now() + 90 * 60 * 1000).toISOString()
-        }
       }
     ];
 
-    const context: UnifiedWorkspaceContext = {
+    return NextResponse.json({
       timestamp: new Date().toISOString(),
-      items: [...githubItems, ...mockNotionAndCalendar]
-    };
-
-    return NextResponse.json(context);
+      items: [...githubItems, ...calendarItems, ...mockNotion]
+    });
   }
 
   // ── MOCK MODE (default) ───────────────────────────────────────────────────
