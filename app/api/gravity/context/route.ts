@@ -7,33 +7,22 @@ export async function GET(request: Request) {
   if (process.env.USE_LIVE_DATA === 'true') {
     const { fetchGitHubData }   = await import('@/integrations/github/client');
     const { fetchCalendarData } = await import('@/integrations/calendar/client');
+    const { fetchNotionData }   = await import('@/integrations/notion/client');
 
     let githubItems: NormalizedItem[]   = [];
     let calendarItems: NormalizedItem[] = [];
+    let notionItems: NormalizedItem[]= [];
 
     try { githubItems   = await fetchGitHubData();   } catch (err) { console.error('GitHub failed:', err); }
     try { calendarItems = await fetchCalendarData(); } catch (err) { console.error('Calendar failed:', err); }
+    try { notionItems   = await fetchNotionData();   } catch (err) { console.error('Notion failed:', err); }
+  
 
-    // Notion still mocked until Day 6
-    const mockNotion: NormalizedItem[] = [
-      {
-        id: 'notion-303',
-        source: 'notion',
-        type: 'task',
-        title: 'Sign-off on Q3 Architecture Roadmap',
-        status: 'pending_approval',
-        updatedAt: new Date().toISOString(),
-        url: 'https://notion.so/org/q3-roadmap',
-        assignees: ['bob_pm'],
-        metadata: { parentProject: 'Core Infrastructure' }
-      }
-    ];
-
-    return NextResponse.json({
-      timestamp: new Date().toISOString(),
-      items: [...githubItems, ...calendarItems, ...mockNotion]
-    });
-  }
+  return NextResponse.json({
+    timestamp: new Date().toISOString(),
+    items: [...githubItems, ...calendarItems, ...notionItems]
+  });
+}
 
   // ── MOCK MODE (default) ───────────────────────────────────────────────────
   const mockContext: UnifiedWorkspaceContext = {
