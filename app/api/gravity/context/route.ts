@@ -2,6 +2,29 @@ import { NextResponse } from 'next/server';
 import type { UnifiedWorkspaceContext } from '@/types';
 
 export async function GET(request: Request) {
+
+  // ── LIVE MODE ─────────────────────────────────────────────────────────────
+  if (process.env.USE_LIVE_DATA === 'true') {
+    const { fetchGitHubData }   = await import('@/integrations/github/client');
+    const { fetchCalendarData } = await import('@/integrations/calendar/client');
+    const { fetchNotionData }   = await import('@/integrations/notion/client');
+
+    let githubItems: NormalizedItem[]   = [];
+    let calendarItems: NormalizedItem[] = [];
+    let notionItems: NormalizedItem[]= [];
+
+    try { githubItems   = await fetchGitHubData();   } catch (err) { console.error('GitHub failed:', err); }
+    try { calendarItems = await fetchCalendarData(); } catch (err) { console.error('Calendar failed:', err); }
+    try { notionItems   = await fetchNotionData();   } catch (err) { console.error('Notion failed:', err); }
+  
+
+  return NextResponse.json({
+    timestamp: new Date().toISOString(),
+    items: [...githubItems, ...calendarItems, ...notionItems]
+  });
+}
+
+  // ── MOCK MODE (default) ───────────────────────────────────────────────────
   const mockContext: UnifiedWorkspaceContext = {
     timestamp: new Date().toISOString(),
     items: [
