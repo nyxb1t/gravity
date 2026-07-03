@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { UnifiedWorkspaceContext, NormalizedItem } from '@/types/normalizer';
+import type { UnifiedWorkspaceContext } from '@/types';
 
 export async function GET(request: Request) {
 
@@ -31,75 +31,108 @@ export async function GET(request: Request) {
       {
         id: 'github-101',
         source: 'github',
-        type: 'issue',
+        kind: 'issue',
         title: 'Critical auth bypass in login handler',
-        status: 'open',
+        body: 'Auth bypass found in the login handler — allows unauthenticated access to protected endpoints.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://github.com/org/repo/issues/101',
-        assignees: ['jane_doe'],
-        metadata: { labels: ['bug', 'critical'], isCritical: true }
+        author: { id: 'jane_doe', displayName: 'Jane Doe' },
+        participants: [{ id: 'jane_doe', displayName: 'Jane Doe', role: 'assignee' }],
+        mentionsUser: false,
+        tags: ['bug', 'critical'],
+        metadata: { isCritical: true },
       },
       {
         id: 'github-202',
         source: 'github',
-        type: 'pr',
+        kind: 'pr_review',
         title: 'Refactor auth middleware to use JWT',
-        status: 'open',
+        body: 'Replaces session-based auth with stateless JWT tokens across all API routes.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://github.com/org/repo/pull/202',
-        assignees: ['bob_pm'],
-        metadata: { labels: ['review-needed'], isCritical: false }
+        author: { id: 'bob_pm', displayName: 'Bob PM' },
+        participants: [{ id: 'bob_pm', displayName: 'Bob PM', role: 'assignee' }],
+        mentionsUser: false,
+        tags: ['review-needed'],
+        metadata: { isCritical: false },
       },
       {
         id: 'notion-303',
         source: 'notion',
-        type: 'task',
+        kind: 'page_edit',
         title: 'Sign-off on Q3 Architecture Roadmap',
-        status: 'pending_approval',
+        body: 'Pending approval from engineering leads before the Q3 planning kickoff.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://notion.so/org/q3-roadmap',
-        assignees: ['bob_pm'],
-        metadata: { parentProject: 'Core Infrastructure' }
+        author: { id: 'bob_pm', displayName: 'Bob PM' },
+        participants: [{ id: 'bob_pm', displayName: 'Bob PM', role: 'assignee' }],
+        mentionsUser: false,
+        channel: 'Core Infrastructure',
+        tags: ['pending_approval'],
+        metadata: { parentProject: 'Core Infrastructure' },
       },
       {
         id: 'notion-404',
         source: 'notion',
-        type: 'task',
+        kind: 'page_edit',
         title: 'Design system component audit',
-        status: 'blocked',
+        body: 'Audit of all design system components for accessibility and visual consistency.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://notion.so/org/design-audit',
-        assignees: ['sara_design'],
-        metadata: { parentProject: 'Design System v2' }
+        author: { id: 'sara_design', displayName: 'Sara Design' },
+        participants: [{ id: 'sara_design', displayName: 'Sara Design', role: 'assignee' }],
+        mentionsUser: false,
+        channel: 'Design System v2',
+        tags: ['blocked'],
+        metadata: { parentProject: 'Design System v2' },
       },
       {
         id: 'calendar-505',
         source: 'calendar',
-        type: 'event',
+        kind: 'event',
         title: 'Urgent QA Defect Review Sync',
-        status: 'scheduled',
+        body: 'Emergency sync to triage critical defects found during the QA load test run.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://calendar.google.com/event?id=505',
-        assignees: ['jane_doe', 'qa_team'],
+        author: null,
+        participants: [
+          { id: 'jane_doe', displayName: 'Jane Doe', role: 'attendee' },
+          { id: 'qa_team', displayName: 'QA Team', role: 'attendee' },
+        ],
+        mentionsUser: false,
+        tags: [],
         metadata: {
           startTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-          endTime: new Date(Date.now() + 90 * 60 * 1000).toISOString()
-        }
+          endTime: new Date(Date.now() + 90 * 60 * 1000).toISOString(),
+        },
       },
       {
         id: 'calendar-606',
         source: 'calendar',
-        type: 'event',
+        kind: 'event',
         title: 'Sprint 12 Deadline',
-        status: 'scheduled',
+        body: 'All Sprint 12 deliverables must be merged and deployed by end of this event.',
+        createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         url: 'https://calendar.google.com/event?id=606',
-        assignees: ['jane_doe', 'bob_pm', 'sara_design'],
+        author: null,
+        participants: [
+          { id: 'jane_doe', displayName: 'Jane Doe', role: 'attendee' },
+          { id: 'bob_pm', displayName: 'Bob PM', role: 'attendee' },
+          { id: 'sara_design', displayName: 'Sara Design', role: 'attendee' },
+        ],
+        mentionsUser: false,
+        tags: [],
         metadata: {
           startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-          endTime: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString()
-        }
-      }
+          endTime: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(),
+        },
+      },
     ]
   };
 
