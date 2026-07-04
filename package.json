@@ -13,6 +13,7 @@
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@notionhq/client": "^2.2.15",
     "@octokit/rest": "^20.1.1",
+    "@slack/bolt": "^4.7.3",
     "googleapis": "^140.0.0",
     "next": "^14.2.0",
     "react": "^18.3.0",
