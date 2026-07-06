@@ -53,6 +53,7 @@ export interface SlackConfig {
  * it is missing or empty, so failures are caught at startup time rather than
  * deep in a request handler.
  */
+
 function requireEnv(key: string): string {
   const value = process.env[key];
   if (!value || value.trim() === "") {
