@@ -12,6 +12,9 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@notionhq/client": "^2.2.15",
+    "@octokit/rest": "^20.1.1",
+    "@slack/bolt": "^4.7.3",
+    "googleapis": "^140.0.0",
     "@octokit/rest": "^20.1.2",
     "dotenv": "^17.4.2",
     "googleapis": "^140.0.1",
