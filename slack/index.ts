@@ -11,6 +11,6 @@
  * ```
  */
 
-export { slackApp, default } from "@/slack/app";
-export { slackConfig } from "@/slack/config";
+export { getSlackApp, default } from "@/slack/app";
+export { getSlackConfig } from "@/slack/config";
 export type { SlackConfig } from "@/slack/config";

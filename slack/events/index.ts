@@ -40,7 +40,6 @@
  * It exists to establish the module boundary and guide future contributors.
  */
 
-// Placeholder — add event exports below as features are implemented.
-// e.g. export { onMessage } from "./message";
-// e.g. export { onAppMention } from "./app-mention";
-// e.g. export { onAppHomeOpened } from "./app-home-opened";
+export { onAppHomeOpened } from "./app-home-opened";
+export { onAppMention } from "./app-mention";
+export { onMessage } from "./message";

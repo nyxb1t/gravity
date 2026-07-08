@@ -34,10 +34,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { bootstrapSlack } from "@/slack/bootstrap";
-
-// Register all handlers on first module evaluation (cold-start).
-bootstrapSlack();
 
 /**
  * Handle all POST requests from Slack (events, commands, interactivity).
@@ -47,20 +43,33 @@ bootstrapSlack();
  * an official Next.js App Router receiver this handler can be replaced.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const { getSlackConfig } = await import("@/slack/config");
+  const config = getSlackConfig();
+
+  if (config.socketMode) {
+    return new NextResponse(
+      JSON.stringify({ error: "Slack is running in Socket Mode. HTTP route disabled." }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  // HTTP mode logic (evaluated only at runtime when requests hit this handler)
+  const { getSlackApp } = await import("@/slack/app");
+  const { bootstrapSlack } = await import("@/slack/bootstrap");
+  const app = getSlackApp();
+  bootstrapSlack(app);
+
   // TODO: Wire Bolt's receiver here once @slack/bolt supports Next.js
   // App Router natively, or integrate with a custom receiver adapter.
-  //
-  // For now this stub confirms the route exists and returns 200 so Slack's
-  // URL verification challenge succeeds during initial setup.
   //
   // Reference implementation (using a custom receiver):
   //   const body = await req.text();
   //   const headers = Object.fromEntries(req.headers.entries());
-  //   await slackApp.processEvent({ body, headers });
+  //   await app.processEvent({ body, headers });
   //   return new NextResponse(null, { status: 200 });
 
   return new NextResponse(
-    JSON.stringify({ message: "Slack route placeholder — not yet wired." }),
+    JSON.stringify({ message: "Slack HTTP route placeholder." }),
     { status: 200, headers: { "Content-Type": "application/json" } }
   );
 }

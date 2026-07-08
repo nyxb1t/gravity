@@ -21,6 +21,7 @@ import type {
   AckFn,
   RespondFn,
   App,
+  RespondArguments,
 } from "@slack/bolt";
 
 // ---------------------------------------------------------------------------
@@ -48,7 +49,7 @@ export type { App };
  */
 export type SlashCommandHandler = (args: {
   command: BoltSlashCommand;
-  ack: AckFn<void>;
+  ack: AckFn<string | RespondArguments>;
   respond: RespondFn;
 } & AllMiddlewareArgs) => Promise<void>;
 

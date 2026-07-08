@@ -110,17 +110,15 @@ function buildSlackConfig(): SlackConfig {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Singleton export
-// ---------------------------------------------------------------------------
+let configInstance: SlackConfig | null = null;
 
 /**
- * The resolved, validated Slack configuration for this process.
- *
- * @example
- * ```ts
- * import { slackConfig } from "@/slack/config";
- * console.log(slackConfig.socketMode); // true | false
- * ```
+ * Returns the resolved, validated Slack configuration.
+ * Lazily evaluated on first call to prevent side-effects at import/build time.
  */
-export const slackConfig: SlackConfig = buildSlackConfig();
+export function getSlackConfig(): SlackConfig {
+  if (!configInstance) {
+    configInstance = buildSlackConfig();
+  }
+  return configInstance;
+}

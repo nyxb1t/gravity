@@ -46,25 +46,26 @@
  */
 
 import { bootstrapSlack } from "@/slack/bootstrap";
-import { slackApp } from "@/slack/app";
+import { getSlackApp } from "@/slack/app";
 
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
+  // Retrieve the singleton app instance
+  const app = getSlackApp();
+
   // Register all event/command/action/view handlers defined in bootstrap.ts.
-  // This is a no-op function call (side-effects fire on module evaluation),
-  // but it guarantees the bootstrap module is evaluated before we start.
-  bootstrapSlack();
+  bootstrapSlack(app);
 
   // Start the Bolt app.
   //
   // In Socket Mode, app.start() does two things:
   //   1. Creates a SocketModeReceiver internally (using SLACK_APP_TOKEN /
-  //      slackConfig.appToken) and opens a WebSocket to api.slack.com.
+  //      appToken) and opens a WebSocket to api.slack.com.
   //   2. Begins dispatching incoming Slack payloads to registered listeners.
-  await slackApp.start();
+  await app.start();
 
   console.log(
     "⚡ Gravity Slack bot is running in Socket Mode.\n" +
