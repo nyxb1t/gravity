@@ -7,7 +7,7 @@
  * receive a ready-to-publish view object.
  */
 
-import type { HomeView } from "@slack/bolt";
+import type { View } from "@slack/types";
 import type { KnownBlock } from "@/slack/blocks";
 import {
   buildHeaderBlock,
@@ -184,7 +184,7 @@ export const MOCK_HOME_VIEW_DATA: HomeViewData = {
  * @param data - Pre-formatted view data (typically mapped from `/api/gravity`).
  * @returns A Slack `HomeView` ready for `views.publish`.
  */
-export function buildHomeView(data: HomeViewData): HomeView {
+export function buildHomeView(data: HomeViewData): View {
   const blocks: KnownBlock[] = [
     ...buildGravityHeader(data),
     ...buildDividerBlock(),
@@ -228,7 +228,8 @@ function buildTodaysFocus(priorities: PriorityCardInput[]): KnownBlock[] {
     return blocks;
   }
 
-  for (const [index, item] of priorities.entries()) {
+  for (let index = 0; index < priorities.length; index++) {
+    const item = priorities[index];
     blocks.push(...buildPriorityCard(item));
     if (index < priorities.length - 1) {
       blocks.push(...buildDividerBlock());
@@ -252,7 +253,8 @@ function buildRelevantChannels(channels: ChannelCardInput[]): KnownBlock[] {
     return blocks;
   }
 
-  for (const [index, channel] of channels.entries()) {
+  for (let index = 0; index < channels.length; index++) {
+    const channel = channels[index];
     blocks.push(...buildChannelCard(channel));
     if (index < channels.length - 1) {
       blocks.push(...buildDividerBlock());
@@ -278,7 +280,8 @@ function buildKeyCollaborators(
     return blocks;
   }
 
-  for (const [index, person] of collaborators.entries()) {
+  for (let index = 0; index < collaborators.length; index++) {
+    const person = collaborators[index];
     blocks.push(...buildPersonCard(person));
     if (index < collaborators.length - 1) {
       blocks.push(...buildDividerBlock());
@@ -302,7 +305,8 @@ function buildRecentAlerts(alerts: AlertCardInput[]): KnownBlock[] {
     return blocks;
   }
 
-  for (const [index, alert] of alerts.entries()) {
+  for (let index = 0; index < alerts.length; index++) {
+    const alert = alerts[index];
     blocks.push(...buildAlertCard(alert));
     if (index < alerts.length - 1) {
       blocks.push(...buildDividerBlock());

@@ -1,14 +1,14 @@
 
 import { Octokit } from '@octokit/rest';
 import { GravityNormalizer } from '@/utils/normalizer';
-import { NormalizedItem } from '@/types/normalizer';
+import type { WorkspaceItem } from '@/types';
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
 export async function fetchGitHubData(
   owner: string = process.env.GITHUB_OWNER || '',
   repo: string = process.env.GITHUB_REPO || ''
-): Promise<NormalizedItem[]> {
+): Promise<WorkspaceItem[]> {
   if (!owner || !repo) {
     throw new Error('GITHUB_OWNER and GITHUB_REPO must be set in .env');
   }
