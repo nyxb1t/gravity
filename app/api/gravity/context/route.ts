@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { UnifiedWorkspaceContext } from '@/types';
+import type { UnifiedWorkspaceContext, WorkspaceItem, NormalizedItem } from '@/types';
 
 export async function GET(request: Request) {
 
