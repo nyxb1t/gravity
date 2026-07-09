@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { UnifiedWorkspaceContext } from '@/types';
+import type { UnifiedWorkspaceContext, WorkspaceItem } from '@/types';
 
 export async function GET(request: Request) {
 
@@ -9,9 +9,9 @@ export async function GET(request: Request) {
     const { fetchCalendarData } = await import('@/integrations/calendar/client');
     const { fetchNotionData }   = await import('@/integrations/notion/client');
 
-    let githubItems: NormalizedItem[]   = [];
-    let calendarItems: NormalizedItem[] = [];
-    let notionItems: NormalizedItem[]= [];
+    let githubItems: WorkspaceItem[]   = [];
+    let calendarItems: WorkspaceItem[] = [];
+    let notionItems: WorkspaceItem[]= [];
 
     try { githubItems   = await fetchGitHubData();   } catch (err) { console.error('GitHub failed:', err); }
     try { calendarItems = await fetchCalendarData(); } catch (err) { console.error('Calendar failed:', err); }

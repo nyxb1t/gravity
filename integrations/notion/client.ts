@@ -1,11 +1,11 @@
 
 import { Client } from '@notionhq/client';
 import { GravityNormalizer } from '@/utils/normalizer';
-import { NormalizedItem } from '@/types/normalizer';
+import { WorkspaceItem } from '@/types';
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-export async function fetchNotionData(): Promise<NormalizedItem[]> {
+export async function fetchNotionData(): Promise<WorkspaceItem[]> {
   const databaseId = process.env.NOTION_DATABASE_ID;
   if (!databaseId) throw new Error('NOTION_DATABASE_ID must be set in .env');
 
