@@ -6,8 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+<<<<<<< HEAD
     "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts",
     "test:orchestrator": "ts-node --project tsconfig.tsnode.json tests/orchestrator.test.ts"
+=======
+    "mcp": "tsx integrations/mcp/server.ts"
+>>>>>>> e794d62 (sync: latest integrations code)
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
