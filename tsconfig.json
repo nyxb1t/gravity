@@ -6,7 +6,6 @@
       "esnext"
     ],
     "target": "es2022",
-    "downlevelIteration": true,
     "ignoreDeprecations": "5.0",
     "allowJs": true,
     "skipLibCheck": true,
