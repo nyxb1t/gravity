@@ -20,7 +20,7 @@
  *    SLACK_SIGNING_SECRET — do NOT add manual checks here.
  *
  *  • `bootstrapSlack()` is called exactly once per cold-start. Subsequent
- *    requests are handled by the already-registered listeners.
+ *    requests skip registration via the `bootstrapped` guard flag.
  *
  * ─── ACTIVATING THIS ROUTE ────────────────────────────────────────────────
  *
@@ -34,6 +34,13 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+
+/**
+ * Guard flag: tracks whether bootstrapSlack() has already been called in this
+ * process lifetime. Prevents duplicate handler registration on every POST.
+ * Module-level variable is shared across all requests in the same worker.
+ */
+let bootstrapped = false;
 
 /**
  * Handle all POST requests from Slack (events, commands, interactivity).
@@ -57,7 +64,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const { getSlackApp } = await import("@/slack/app");
   const { bootstrapSlack } = await import("@/slack/bootstrap");
   const app = getSlackApp();
-  bootstrapSlack(app);
+
+  // Register handlers only once per process lifetime.
+  // Without this guard, every POST request would add duplicate listeners.
+  if (!bootstrapped) {
+    bootstrapSlack(app);
+    bootstrapped = true;
+  }
 
   // TODO: Wire Bolt's receiver here once @slack/bolt supports Next.js
   // App Router natively, or integrate with a custom receiver adapter.

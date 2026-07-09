@@ -4,11 +4,15 @@
  *
  * Receives slash command invocations, processes subcommands/queries, invokes
  * the intelligence orchestrator, and responds with formatted Block Kit blocks.
+ *
+ * Data source is controlled by the USE_LIVE_DATA environment variable:
+ *  - USE_LIVE_DATA=true  → real data from GitHub, Google Calendar, and Notion
+ *  - USE_LIVE_DATA=false → mock data (default, safe for development/CI)
  */
 
 import type { SlashCommandHandler } from "@/slack/types";
 import { runOrchestrator } from "@/ai/engine";
-import { getMockData } from "@/data/mock";
+import { getWorkspaceData } from "@/integrations/live";
 import {
   formatPrioritiesBlocks,
   formatSearchBlocks,
@@ -28,11 +32,12 @@ export const gravityCommandHandler: SlashCommandHandler = async ({
   await ack();
 
   const text = (command.text || "").trim();
-  logger.info(`Received /gravity command from user ${command.user_id} (${command.user_name}). Arguments: "${text}"`);
+  const useLive = process.env.USE_LIVE_DATA === "true";
+  logger.info(`Received /gravity command from user ${command.user_id} (${command.user_name}). Arguments: "${text}". Live data: ${useLive}`);
 
   try {
-    // Get mock context and items relative to current date/time
-    const { items, userContext } = getMockData(new Date());
+    // Fetch workspace items (live or mock based on USE_LIVE_DATA)
+    const { items, userContext } = await getWorkspaceData();
 
     let mode: "lens" | "search" | "conflicts" = "lens";
     let searchQuery = "";

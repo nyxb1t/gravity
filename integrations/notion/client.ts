@@ -1,7 +1,7 @@
 
 import { Client } from '@notionhq/client';
 import { GravityNormalizer } from '@/utils/normalizer';
-import { WorkspaceItem } from '@/types';
+import type { WorkspaceItem } from '@/types';
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
