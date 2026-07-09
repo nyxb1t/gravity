@@ -1,7 +1,6 @@
-
 import { google } from 'googleapis';
 import { GravityNormalizer } from '@/utils/normalizer';
-import { NormalizedItem } from '@/types/normalizer';
+import type { WorkspaceItem } from '@/types';
 
 function getCalendarClient() {
   const auth = new google.auth.OAuth2(
@@ -16,7 +15,7 @@ function getCalendarClient() {
   return google.calendar({ version: 'v3', auth });
 }
 
-export async function fetchCalendarData(): Promise<NormalizedItem[]> {
+export async function fetchCalendarData(): Promise<WorkspaceItem[]> {
   const calendar = getCalendarClient();
 
   const now = new Date();

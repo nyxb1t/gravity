@@ -13,10 +13,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@notionhq/client": "^2.2.15",
-    "@octokit/rest": "^20.1.1",
-    "@slack/bolt": "^4.7.3",
-    "googleapis": "^140.0.0",
     "@octokit/rest": "^20.1.2",
+    "@slack/bolt": "^4.7.3",
     "dotenv": "^17.4.2",
     "googleapis": "^140.0.1",
     "next": "^14.2.0",
@@ -27,8 +25,8 @@
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.0",
     "ts-node": "^10.9.2",
-    "tsx": "^4.22.4",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.22.4",
     "typescript": "^5.4.5"
   }
 }

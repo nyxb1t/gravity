@@ -55,8 +55,19 @@ slackApp.event("app_home_opened", onAppHomeOpened);
 // ---------------------------------------------------------------------------
 // § BLOCK ACTIONS
 // ---------------------------------------------------------------------------
+import {
+  onCalendarAction,
+  onPendingPrsAction,
+  onShowUnreadAction,
+  onSummarizeDayAction,
+} from "./actions/quick-actions";
 // import { onDismissAction } from "./actions/dismiss";
 // slackApp.action("dismiss_item", onDismissAction);
+
+slackApp.action("calendar", onCalendarAction);
+slackApp.action("pending_prs", onPendingPrsAction);
+slackApp.action("show_unread", onShowUnreadAction);
+slackApp.action("summarize_day", onSummarizeDayAction);
 
 // ---------------------------------------------------------------------------
 // § VIEW SUBMISSIONS
