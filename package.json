@@ -9,6 +9,9 @@
     "slack:dev": "tsx --env-file .env.local slack/start.ts",
     "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts",
     "test:orchestrator": "ts-node --project tsconfig.tsnode.json tests/orchestrator.test.ts"
+
+    "mcp": "tsx integrations/mcp/server.ts"
+
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
