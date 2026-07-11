@@ -33,7 +33,7 @@
  * each section to make diffs easy to review.
  */
 
-import { slackApp } from "@/slack/app";
+import { App } from "@slack/bolt";
 
 // ---------------------------------------------------------------------------
 // § SLASH COMMANDS
@@ -78,27 +78,33 @@ slackApp.action("summarize_day", onSummarizeDayAction);
 // ---------------------------------------------------------------------------
 // Export the bootstrapped app for use in the Next.js API route
 // ---------------------------------------------------------------------------
+import { gravityCommandHandler } from "./commands";
+import { onAppHomeOpened, onAppMention, onMessage } from "./events";
 
 /**
  * Call this function once during server initialisation to register all
- * active Slack handlers. Idempotent — safe to call multiple times (Bolt
- * de-duplicates listener registration internally).
+ * active Slack handlers.
  *
  * @example
  * ```ts
- * // app/api/slack/events/route.ts
+ * import { getSlackApp } from "@/slack/app";
  * import { bootstrapSlack } from "@/slack/bootstrap";
- * bootstrapSlack();
+ * const app = getSlackApp();
+ * bootstrapSlack(app);
  * ```
  */
-export function bootstrapSlack(): void {
-  // All registrations are performed at import time via the top-level calls
-  // above. This function intentionally has no body — it exists solely as a
-  // named export that forces the module to be evaluated (and all
-  // `slackApp.xxx()` calls to execute) when called from the API route.
-  //
-  // This pattern avoids accidental tree-shaking of side-effectful imports
-  // in bundlers that do not mark @slack/bolt as sideEffect-free.
-}
+export function bootstrapSlack(app: App): void {
+  // § SLASH COMMANDS
+  app.command("/gravity", gravityCommandHandler);
 
-export { slackApp };
+  // § EVENTS
+  app.event("app_home_opened", onAppHomeOpened);
+  app.event("app_mention", onAppMention);
+  app.event("message", onMessage);
+
+  // § BLOCK ACTIONS
+  // app.action("dismiss_item", onDismissAction);
+
+  // § VIEW SUBMISSIONS
+  // app.view("settings_modal", onSettingsModalSubmit);
+}

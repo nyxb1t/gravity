@@ -20,7 +20,7 @@
  */
 
 import { App, LogLevel } from "@slack/bolt";
-import { slackConfig } from "@/slack/config";
+import { getSlackConfig } from "@/slack/config";
 
 // ---------------------------------------------------------------------------
 // App initialisation
@@ -38,40 +38,34 @@ function resolveLogLevel(): LogLevel {
   return LogLevel.DEBUG;
 }
 
+let appInstance: App | null = null;
+
 /**
- * The singleton Slack Bolt App instance.
- *
- * Socket Mode is enabled when `SLACK_APP_TOKEN` is present in the environment
- * (see slack/config.ts). In HTTP mode the app listens on `slackConfig.port`.
- *
- * @example
- * ```ts
- * import { slackApp } from "@/slack/app";
- *
- * // Register a command handler from slack/commands/
- * slackApp.command("/gravity", myCommandHandler);
- * ```
+ * Returns the singleton Slack Bolt App instance.
+ * Lazily initialized to prevent any side effects or env validations at build time.
  */
-export const slackApp = new App({
-  token: slackConfig.botToken,
-  signingSecret: slackConfig.signingSecret,
+export function getSlackApp(): App {
+  if (!appInstance) {
+    const config = getSlackConfig();
+    appInstance = new App({
+      token: config.botToken,
+      signingSecret: config.signingSecret,
 
-  // Socket Mode — requires SLACK_APP_TOKEN.
-  // When false, the app expects an HTTP receiver.
-  ...(slackConfig.socketMode
-    ? {
-        socketMode: true,
-        appToken: slackConfig.appToken,
-      }
-    : {
-        port: slackConfig.port,
-      }),
+      // Socket Mode — requires appToken.
+      // When false, the app expects an HTTP receiver.
+      ...(config.socketMode
+        ? {
+            socketMode: true,
+            appToken: config.appToken,
+          }
+        : {
+            port: config.port,
+          }),
 
-  logLevel: resolveLogLevel(),
-});
+      logLevel: resolveLogLevel(),
+    });
+  }
+  return appInstance;
+}
 
-// ---------------------------------------------------------------------------
-// Named exports
-// ---------------------------------------------------------------------------
-
-export default slackApp;
+export default getSlackApp;

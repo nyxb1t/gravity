@@ -38,5 +38,4 @@
  * It exists to establish the module boundary and guide future contributors.
  */
 
-// Placeholder — add command exports below as features are implemented.
-// e.g. export { gravityCommandHandler } from "./gravity";
+export { gravityCommandHandler } from "./gravity";

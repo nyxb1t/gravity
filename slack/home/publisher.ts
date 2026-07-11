@@ -7,7 +7,7 @@
  * upstream — callers supply `HomeViewData` and this function handles delivery.
  */
 
-import { slackApp } from "@/slack/app";
+import { getSlackApp } from "@/slack/app";
 import { buildHomeView } from "./view";
 import type { HomeViewData } from "./view";
 
@@ -21,7 +21,8 @@ export async function publishHomeView(
   userId: string,
   data: HomeViewData
 ): Promise<void> {
-  await slackApp.client.views.publish({
+  const app = getSlackApp();
+  await app.client.views.publish({
     user_id: userId,
     view: buildHomeView(data),
   });
