@@ -1,7 +1,6 @@
-
 import { google } from 'googleapis';
 import { GravityNormalizer } from '@/utils/normalizer';
-import { WorkspaceItem } from '@/types';
+import type { WorkspaceItem } from '@/types';
 
 function getCalendarClient() {
   const auth = new google.auth.OAuth2(

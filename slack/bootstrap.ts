@@ -36,7 +36,47 @@
 import { App } from "@slack/bolt";
 
 // ---------------------------------------------------------------------------
-// Grouped imports for handler functions
+// § SLASH COMMANDS
+// ---------------------------------------------------------------------------
+// import { gravityCommandHandler } from "./commands/gravity";
+// slackApp.command("/gravity", gravityCommandHandler);
+
+// ---------------------------------------------------------------------------
+// § EVENTS
+// ---------------------------------------------------------------------------
+import { onAppHomeOpened } from "./events/app-home-opened";
+// import { onAppMention } from "./events/app-mention";
+// import { onMessage }    from "./events/message";
+
+slackApp.event("app_home_opened", onAppHomeOpened);
+// slackApp.event("app_mention", onAppMention);
+// slackApp.event("message",     onMessage);
+
+// ---------------------------------------------------------------------------
+// § BLOCK ACTIONS
+// ---------------------------------------------------------------------------
+import {
+  onCalendarAction,
+  onPendingPrsAction,
+  onShowUnreadAction,
+  onSummarizeDayAction,
+} from "./actions/quick-actions";
+// import { onDismissAction } from "./actions/dismiss";
+// slackApp.action("dismiss_item", onDismissAction);
+
+slackApp.action("calendar", onCalendarAction);
+slackApp.action("pending_prs", onPendingPrsAction);
+slackApp.action("show_unread", onShowUnreadAction);
+slackApp.action("summarize_day", onSummarizeDayAction);
+
+// ---------------------------------------------------------------------------
+// § VIEW SUBMISSIONS
+// ---------------------------------------------------------------------------
+// import { onSettingsModalSubmit } from "./views/settings-modal";
+// slackApp.view("settings_modal", onSettingsModalSubmit);
+
+// ---------------------------------------------------------------------------
+// Export the bootstrapped app for use in the Next.js API route
 // ---------------------------------------------------------------------------
 import { gravityCommandHandler } from "./commands";
 import { onAppHomeOpened, onAppMention, onMessage } from "./events";

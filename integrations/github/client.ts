@@ -1,7 +1,7 @@
 
 import { Octokit } from '@octokit/rest';
 import { GravityNormalizer } from '@/utils/normalizer';
-import type { WorkspaceItem } from '@/types';
+import { WorkspaceItem } from '@/types';
 
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
