@@ -78,8 +78,8 @@ import {
 const DEFAULT_TOP_N = 10;
 
 const DEFAULT_LLM_CONFIG: LLMConfig = {
-  provider: "mock",
-  model: "mock-v1",
+  provider: "google",
+  model: "gemini-1.5-flash",
 };
 
 // ---------------------------------------------------------------------------
