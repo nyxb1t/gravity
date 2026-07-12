@@ -34,6 +34,9 @@
  */
 
 import { App } from "@slack/bolt";
+import { getSlackApp } from "./app";
+const slackApp = getSlackApp();
+
 
 // ---------------------------------------------------------------------------
 // § SLASH COMMANDS
@@ -130,4 +133,4 @@ export function bootstrapSlack(app: App): void {
   // app.view("settings_modal", onSettingsModalSubmit);
   
 }
-export { slackApp };
+
