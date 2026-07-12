@@ -95,6 +95,8 @@ async function loadHomeViewData(_userId: string): Promise<HomeViewData> {
       channels: [], // Future: map live channels from integration data
       collaborators: [], // Future: map live collaborators from integration data
       alerts,
+      meetings: [],     
+  insights: [],
     };
   } catch (err) {
     console.error("[Gravity/HomeTab] Failed to load live data, falling back to mock:", err);
