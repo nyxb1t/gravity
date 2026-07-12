@@ -44,7 +44,7 @@ import { App } from "@slack/bolt";
 // ---------------------------------------------------------------------------
 // § EVENTS
 // ---------------------------------------------------------------------------
-import { onAppHomeOpened } from "./events/app-home-opened";
+
 // import { onAppMention } from "./events/app-mention";
 // import { onMessage }    from "./events/message";
 
