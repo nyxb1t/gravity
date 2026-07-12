@@ -112,6 +112,7 @@ async function loadHomeViewData(_userId: string): Promise<HomeViewData> {
 export async function onAppHomeOpened({
   event,
 }: EventArgs<"app_home_opened">): Promise<void> {
+  console.log("🚨 APP HOME OPENED EVENT FIRED");
   if (event.tab !== "home") return;
 
   const data = await loadHomeViewData(event.user);

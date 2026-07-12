@@ -9,6 +9,9 @@
     "slack:dev": "tsx --env-file .env.local slack/start.ts",
     "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts",
     "test:orchestrator": "ts-node --project tsconfig.tsnode.json tests/orchestrator.test.ts"
+
+    "mcp": "tsx integrations/mcp/server.ts"
+
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
@@ -24,9 +27,12 @@
   "devDependencies": {
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.0",
+    "autoprefixer": "^10.5.2",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
-    "tsx": "^4.22.4",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.22.4",
     "typescript": "^5.4.5"
   }
 }

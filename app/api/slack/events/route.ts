@@ -34,6 +34,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { bootstrapSlack, slackApp } from "@/slack/bootstrap";
+
+// Register all handlers on first module evaluation (cold-start).
+bootstrapSlack();
 
 /**
  * Guard flag: tracks whether bootstrapSlack() has already been called in this
@@ -46,18 +50,18 @@ let bootstrapped = false;
  * Handle all POST requests from Slack (events, commands, interactivity).
  *
  * Bolt's Next.js receiver is not yet part of the public API, so we forward
- * the raw body to Bolt's processEvent machinery. Once @slack/bolt ships
- * an official Next.js App Router receiver this handler can be replaced.
+ * the raw body to Bolt's processEvent machinery.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const { getSlackConfig } = await import("@/slack/config");
-  const config = getSlackConfig();
-
-  if (config.socketMode) {
-    return new NextResponse(
-      JSON.stringify({ error: "Slack is running in Socket Mode. HTTP route disabled." }),
-      { status: 400, headers: { "Content-Type": "application/json" } }
-    );
+  const body = await req.text();
+  
+  try {
+    const json = JSON.parse(body);
+    if (json.type === "url_verification") {
+      return new NextResponse(json.challenge, { status: 200 });
+    }
+  } catch (e) {
+    // Ignore JSON parse errors for url-encoded payloads (like commands)
   }
 
   // HTTP mode logic (evaluated only at runtime when requests hit this handler)
@@ -80,11 +84,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   //   const headers = Object.fromEntries(req.headers.entries());
   //   await app.processEvent({ body, headers });
   //   return new NextResponse(null, { status: 200 });
+  const headers = Object.fromEntries(req.headers.entries());
+  
+  // Forward to Bolt
+  if (typeof slackApp.processEvent === 'function') {
+      await (slackApp as any).processEvent({ body, headers });
+  } else if ((slackApp as any).receiver && typeof (slackApp as any).receiver.requestHandler === 'function') {
+     // fallback for older Bolt versions
+  } else {
+     // Just pass it as best effort if it's a custom receiver that has processEvent
+     const anyApp = slackApp as any;
+     if (anyApp.receiver && typeof anyApp.receiver.processEvent === 'function') {
+         await anyApp.receiver.processEvent({ body, headers });
+     }
+  }
 
-  return new NextResponse(
-    JSON.stringify({ message: "Slack HTTP route placeholder." }),
-    { status: 200, headers: { "Content-Type": "application/json" } }
-  );
+  return new NextResponse(null, { status: 200 });
 }
 
 // Slack sends GET during URL verification — acknowledge gracefully.
