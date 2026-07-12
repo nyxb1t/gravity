@@ -128,4 +128,5 @@ export function bootstrapSlack(app: App): void {
 
   // § VIEW SUBMISSIONS
   // app.view("settings_modal", onSettingsModalSubmit);
+  export { slackApp };
 }
