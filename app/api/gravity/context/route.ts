@@ -14,8 +14,15 @@ let notionItems: WorkspaceItem[]   = [];
   try { calendarItems = await fetchCalendarData(); } catch (err) { console.error('Calendar failed:', err); }
   try { notionItems   = await fetchNotionData();   } catch (err) { console.error('Notion failed:', err); }
 
-  return NextResponse.json({
+  return NextResponse.json(
+  {
     timestamp: new Date().toISOString(),
     items: [...githubItems, ...calendarItems, ...notionItems]
-  });
+  },
+  {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    }
+  }
+);
 }
