@@ -35,7 +35,7 @@
 
 import { App } from "@slack/bolt";
 import { getSlackApp } from "./app";
-const slackApp = getSlackApp();
+export const slackApp = getSlackApp();
 
 
 // ---------------------------------------------------------------------------
