@@ -1,4 +1,3 @@
-
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
@@ -6,69 +5,18 @@ import {
   ListToolsRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 
+import { getWorkspaceData } from '../live.js';
+
 async function getWorkspaceContext() {
-  if (process.env.USE_LIVE_DATA !== 'true') {
-    // Mock mode — same shape as live data
-    return {
-      timestamp: new Date().toISOString(),
-      items: [
-        {
-          id: 'github-101',
-          source: 'github',
-          type: 'issue',
-          title: 'Critical auth bypass in login handler',
-          status: 'open',
-          updatedAt: new Date().toISOString(),
-          assignees: ['jane_doe'],
-          metadata: { labels: ['bug', 'critical'], isCritical: true }
-        },
-        {
-          id: 'notion-303',
-          source: 'notion',
-          type: 'task',
-          title: 'Sign-off on Q3 Architecture Roadmap',
-          status: 'pending_approval',
-          updatedAt: new Date().toISOString(),
-          assignees: ['bob_pm'],
-          metadata: { parentProject: 'Core Infrastructure' }
-        },
-        {
-          id: 'calendar-505',
-          source: 'calendar',
-          type: 'event',
-          title: 'Urgent QA Defect Review Sync',
-          status: 'scheduled',
-          updatedAt: new Date().toISOString(),
-          assignees: ['jane_doe', 'qa_team'],
-          metadata: {
-            startTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
-            endTime: new Date(Date.now() + 90 * 60 * 1000).toISOString()
-          }
-        }
-      ]
-    };
-  }
-
-  // Live mode — import all three clients
-  const { fetchGitHubData }   = await import('../github/client.js');
-  const { fetchNotionData }   = await import('../notion/client.js');
-  const { fetchCalendarData } = await import('../calendar/client.js');
-
-  const [github, notion, calendar] = await Promise.allSettled([
-    fetchGitHubData(),
-    fetchNotionData(),
-    fetchCalendarData()
-  ]);
-
-  const items = [
-    ...(github.status   === 'fulfilled' ? github.value   : []),
-    ...(notion.status   === 'fulfilled' ? notion.value   : []),
-    ...(calendar.status === 'fulfilled' ? calendar.value : [])
-  ];
+  // getWorkspaceData automatically respects USE_LIVE_DATA, dynamically imports
+  // integration clients when live, and falls back to mock data otherwise.
+  const { items } = await getWorkspaceData();
 
   return {
     timestamp: new Date().toISOString(),
-    items
+    // Extract the raw WorkspaceItem from the NormalizedItem wrapper
+    // because this route's contract serves WorkspaceItems to external callers.
+    items: items.map(i => i.raw)
   };
 }
 

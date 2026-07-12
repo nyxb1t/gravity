@@ -5,11 +5,15 @@
  * Triggered when a user mentions @Gravity in a channel or thread.
  * Parses the query, invokes the intelligence orchestrator, and replies back
  * in the same thread/channel with formatted priorities or search results.
+ *
+ * Data source is controlled by the USE_LIVE_DATA environment variable:
+ *  - USE_LIVE_DATA=true  → real data from GitHub, Google Calendar, and Notion
+ *  - USE_LIVE_DATA=false → mock data (default, safe for development/CI)
  */
 
 import type { EventArgs } from "@/slack/types";
 import { runOrchestrator } from "@/ai/engine";
-import { getMockData } from "@/data/mock";
+import { getWorkspaceData } from "@/integrations/live";
 import { formatPrioritiesBlocks, formatSearchBlocks } from "@/slack/utils";
 
 /**
@@ -25,15 +29,16 @@ export async function onAppMention({
   // Strip the bot mention e.g. <@U024BE91L> from the text
   const cleanQuery = rawText.replace(/<@[A-Z0-9]+>/gi, "").trim();
 
-  logger.info(`Received @Gravity mention from user ${event.user}. Query: "${cleanQuery}"`);
+  const useLive = process.env.USE_LIVE_DATA === "true";
+  logger.info(`Received @Gravity mention from user ${event.user}. Query: "${cleanQuery}". Live data: ${useLive}`);
 
   // Acknowledge/reply in the same thread/channel.
   // Bolt does not have an ack() function for events, but we thread the response.
   const thread_ts = event.thread_ts ?? event.ts;
 
   try {
-    // Get mock context and items relative to current date/time
-    const { items, userContext } = getMockData(new Date());
+    // Fetch workspace items (live or mock based on USE_LIVE_DATA)
+    const { items, userContext } = await getWorkspaceData();
 
     // Determine the orchestration mode based on the user query
     const isPriorityQuery = !cleanQuery || /priorit|focus|today|digest/i.test(cleanQuery);

@@ -79,7 +79,28 @@ slackApp.action("summarize_day", onSummarizeDayAction);
 // Export the bootstrapped app for use in the Next.js API route
 // ---------------------------------------------------------------------------
 import { gravityCommandHandler } from "./commands";
+
+
+// ---------------------------------------------------------------------------
+// § EVENTS
+// ---------------------------------------------------------------------------
 import { onAppHomeOpened, onAppMention, onMessage } from "./events";
+
+// ---------------------------------------------------------------------------
+// § BLOCK ACTIONS
+// ---------------------------------------------------------------------------
+// import { onDismissAction } from "./actions/dismiss";
+// slackApp.action("dismiss_item", onDismissAction);
+
+// ---------------------------------------------------------------------------
+// § VIEW SUBMISSIONS
+// ---------------------------------------------------------------------------
+// import { onSettingsModalSubmit } from "./views/settings-modal";
+// slackApp.view("settings_modal", onSettingsModalSubmit);
+
+// ---------------------------------------------------------------------------
+// Export the bootstrapped app for use in the Next.js API route
+// ---------------------------------------------------------------------------
 
 /**
  * Call this function once during server initialisation to register all

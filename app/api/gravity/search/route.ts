@@ -1,29 +1,24 @@
 import { NextResponse } from 'next/server';
 import { runOrchestrator } from '@/ai/engine';
-import { getMockData } from '@/data/mock';
+import { getWorkspaceData } from '@/integrations/live';
 
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     
-    // Accept variations of query/searchQuery and userContext/context/user_context
+    // Accept variations of query/searchQuery
     const query = body.query ?? body.searchQuery ?? '';
-    const userContext = body.userContext ?? body.context ?? body.user_context;
     
-    // Get mock data (which provides default mock context and workspace items)
-    // We instantiate mock data with current date/time to make scoring realistic
-    const { items, userContext: defaultUserContext } = getMockData(new Date());
-    
-    // Use provided user context, or fallback to the mock one
-    const contextToUse = userContext ?? defaultUserContext;
+    // Fetch workspace items (live or mock based on USE_LIVE_DATA)
+    const { items, userContext } = await getWorkspaceData();
     
     const output = await runOrchestrator({
       items,
-      context: contextToUse,
+      context: userContext,
       mode: 'search',
       searchQuery: query,
       options: {
-        debug: true, // Enable debug to populate meta details if needed
+        debug: true,
       },
     });
     

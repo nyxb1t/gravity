@@ -18,11 +18,11 @@ export async function GET(request: Request) {
     try { notionItems   = await fetchNotionData();   } catch (err) { console.error('Notion failed:', err); }
   
 
-  return NextResponse.json({
-    timestamp: new Date().toISOString(),
-    items: [...githubItems, ...calendarItems, ...notionItems]
-  });
-}
+    return NextResponse.json({
+      timestamp: new Date().toISOString(),
+      items: [...githubItems, ...calendarItems, ...notionItems]
+    });
+  }
 
   // ── MOCK MODE (default) ───────────────────────────────────────────────────
   const mockContext: UnifiedWorkspaceContext = {
