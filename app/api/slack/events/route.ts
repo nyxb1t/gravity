@@ -37,7 +37,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { bootstrapSlack, slackApp } from "@/slack/bootstrap";
 
 // Register all handlers on first module evaluation (cold-start).
-bootstrapSlack();
+bootstrapSlack(slackApp);
 
 /**
  * Guard flag: tracks whether bootstrapSlack() has already been called in this
