@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 const ArrowUpRight = () => (
   <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" className="h-4 w-4">
     <path d="M5 15 15 5M7 5h8v8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
@@ -41,9 +43,7 @@ export default function Home() {
 
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-8">
         <a href="#top" className="group flex items-center gap-2.5" aria-label="Gravity home">
-          <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-violet-600">
-            <span className="h-3 w-3 rounded-full border-2 border-white/90" />
-          </span>
+          <Image src="/gravity-logo.jpeg" alt="" width={32} height={32} className="h-8 w-8 rounded-[10px] object-cover" priority />
           <span className="text-lg font-semibold tracking-tight">Gravity</span>
         </a>
         <div className="hidden items-center gap-7 text-sm text-zinc-400 md:flex">
