@@ -319,7 +319,7 @@ Gravity demonstrates:
 
 🎬 Demo Video: [https://youtu.be/ClpMUwlQ_B4?si=pehhqqcCbuoj4IvO]
 
-🌐 Railway Deployment: [gravity-production-b956.up.railway.app]
+🌐 Railway Deployment: [https://gravity-production-b956.up.railway.app]
 
 ---
 
