@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 const ArrowUpRight = () => (
@@ -65,7 +66,7 @@ export default function PrivacyPage() {
     <main className="min-h-screen bg-[#08080b] text-white selection:bg-violet-500/40">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5" aria-label="Gravity home">
-          <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-violet-600"><span className="h-3 w-3 rounded-full border-2 border-white/90" /></span>
+          <Image src="/gravity-logo.jpeg" alt="" width={32} height={32} className="h-8 w-8 rounded-[10px] object-cover" priority />
           <span className="text-lg font-semibold tracking-tight">Gravity</span>
         </Link>
         <div className="hidden items-center gap-7 text-sm text-zinc-400 md:flex">
