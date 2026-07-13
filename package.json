@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "slack:dev": "tsx --env-file .env.local slack/start.ts",
+    "test:integrations": "tsx --env-file .env.local scripts/test-integrations.ts",
     "test:conflicts": "ts-node --project tsconfig.tsnode.json tests/conflicts.test.ts",
     "test:orchestrator": "ts-node --project tsconfig.tsnode.json tests/orchestrator.test.ts",
     "mcp": "tsx integrations/mcp/server.ts"

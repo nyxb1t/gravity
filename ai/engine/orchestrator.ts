@@ -77,10 +77,24 @@ import {
 
 const DEFAULT_TOP_N = 10;
 
-const DEFAULT_LLM_CONFIG: LLMConfig = {
-  provider: "google",
-  model: "gemini-1.5-flash",
-};
+/**
+ * Resolves the LLM config at call time so it picks up env vars correctly.
+ * Uses Gemini when GEMINI_API_KEY is set, falls back to mock otherwise.
+ */
+function resolveLLMConfig(): LLMConfig {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (geminiKey) {
+    // Use gemini-1.5-flash by default (better free-tier limits than 2.0-flash)
+    const model = process.env.GEMINI_MODEL ?? 'gemini-1.5-flash';
+    return {
+      provider: 'google',
+      model,
+      apiKey:   geminiKey,
+    };
+  }
+  console.warn('[AI] ⚠️  GEMINI_API_KEY not set — using mock LLM provider');
+  return { provider: 'mock', model: 'mock-v1' };
+}
 
 // ---------------------------------------------------------------------------
 // Timing utility
@@ -118,7 +132,7 @@ export async function runOrchestrator(
     topN = DEFAULT_TOP_N,
     debug = false,
     nowMs = Date.now(),
-    llm: llmConfig = DEFAULT_LLM_CONFIG,
+    llm: llmConfig = resolveLLMConfig(),
   } = options;
 
   // Stage timing accumulator — populated inline as each stage completes.
@@ -191,9 +205,13 @@ export async function runOrchestrator(
     | { code: string; message: string; details?: Record<string, unknown> }
     | undefined;
 
+  console.log(`[AI] 🤖 Using provider: ${llmConfig.provider} (${llmConfig.model})`);
+
   try {
     llmRaw = await callLLM(prompt, llmConfig);
+    console.log(`[AI] ✅ LLM call succeeded in ${llmTimer()}ms`);
   } catch (err) {
+    console.error(`[AI] ❌ LLM call failed (${llmConfig.provider}):`, err instanceof Error ? err.message : err);
     llmError = {
       code: "LLM_CALL_FAILED",
       message:

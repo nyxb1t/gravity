@@ -2,58 +2,23 @@
  * @file slack/bootstrap.ts
  * @description Wires all Slack handlers onto the Bolt App instance.
  *
- * This module is the single place where command, event, action, and view
- * handlers are registered with `slackApp`. It is imported once by the
- * Next.js API route that handles incoming Slack requests.
- *
- * ─── REGISTRATION PATTERN ────────────────────────────────────────────────
- *
- *  When a new handler is ready to activate:
- *
- *  1. Import the handler from its feature module:
- *     ```ts
- *     import { gravityCommandHandler } from "./commands/gravity";
- *     ```
- *
- *  2. Register it in the appropriate section below:
- *     ```ts
- *     slackApp.command("/gravity", gravityCommandHandler);
- *     ```
- *
- * ─── SECTION LAYOUT ──────────────────────────────────────────────────────
- *
- *   § SLASH COMMANDS   — /gravity, /focus, etc.
- *   § EVENTS           — message, app_mention, app_home_opened, etc.
- *   § BLOCK ACTIONS    — button clicks, select menus, etc.
- *   § VIEW SUBMISSIONS — modal submit / cancel callbacks
- *
- * ─────────────────────────────────────────────────────────────────────────
- *
- * Keep handler imports grouped by section and sorted alphabetically within
- * each section to make diffs easy to review.
+ * This is the single place where command, event, action, and view handlers
+ * are registered with `slackApp`. Import and call `bootstrapSlack(app)` once
+ * during server initialisation.
  */
 
-import { App } from "@slack/bolt";
-import { getSlackApp } from "./app";
-export const slackApp = getSlackApp();
-
+import { App } from '@slack/bolt';
+import { getSlackApp } from './app';
 
 // ---------------------------------------------------------------------------
 // § SLASH COMMANDS
 // ---------------------------------------------------------------------------
-// import { gravityCommandHandler } from "./commands/gravity";
-// slackApp.command("/gravity", gravityCommandHandler);
+import { gravityCommandHandler } from './commands';
 
 // ---------------------------------------------------------------------------
 // § EVENTS
 // ---------------------------------------------------------------------------
-
-// import { onAppMention } from "./events/app-mention";
-// import { onMessage }    from "./events/message";
-
-slackApp.event("app_home_opened", onAppHomeOpened);
-// slackApp.event("app_mention", onAppMention);
-// slackApp.event("message",     onMessage);
+import { onAppHomeOpened, onAppMention, onMessage } from './events';
 
 // ---------------------------------------------------------------------------
 // § BLOCK ACTIONS
@@ -63,51 +28,14 @@ import {
   onPendingPrsAction,
   onShowUnreadAction,
   onSummarizeDayAction,
-} from "./actions/quick-actions";
-// import { onDismissAction } from "./actions/dismiss";
-// slackApp.action("dismiss_item", onDismissAction);
-
-slackApp.action("calendar", onCalendarAction);
-slackApp.action("pending_prs", onPendingPrsAction);
-slackApp.action("show_unread", onShowUnreadAction);
-slackApp.action("summarize_day", onSummarizeDayAction);
+} from './actions/quick-actions';
 
 // ---------------------------------------------------------------------------
-// § VIEW SUBMISSIONS
-// ---------------------------------------------------------------------------
-// import { onSettingsModalSubmit } from "./views/settings-modal";
-// slackApp.view("settings_modal", onSettingsModalSubmit);
-
-// ---------------------------------------------------------------------------
-// Export the bootstrapped app for use in the Next.js API route
-// ---------------------------------------------------------------------------
-import { gravityCommandHandler } from "./commands";
-
-
-// ---------------------------------------------------------------------------
-// § EVENTS
-// ---------------------------------------------------------------------------
-import { onAppHomeOpened, onAppMention, onMessage } from "./events";
-
-// ---------------------------------------------------------------------------
-// § BLOCK ACTIONS
-// ---------------------------------------------------------------------------
-// import { onDismissAction } from "./actions/dismiss";
-// slackApp.action("dismiss_item", onDismissAction);
-
-// ---------------------------------------------------------------------------
-// § VIEW SUBMISSIONS
-// ---------------------------------------------------------------------------
-// import { onSettingsModalSubmit } from "./views/settings-modal";
-// slackApp.view("settings_modal", onSettingsModalSubmit);
-
-// ---------------------------------------------------------------------------
-// Export the bootstrapped app for use in the Next.js API route
+// Bootstrap function — call once at startup
 // ---------------------------------------------------------------------------
 
 /**
- * Call this function once during server initialisation to register all
- * active Slack handlers.
+ * Registers all active Slack handlers on the given Bolt App instance.
  *
  * @example
  * ```ts
@@ -119,18 +47,19 @@ import { onAppHomeOpened, onAppMention, onMessage } from "./events";
  */
 export function bootstrapSlack(app: App): void {
   // § SLASH COMMANDS
-  app.command("/gravity", gravityCommandHandler);
+  app.command('/gravity', gravityCommandHandler);
 
-  // § EVENTS
-  app.event("app_home_opened", onAppHomeOpened);
-  app.event("app_mention", onAppMention);
-  app.event("message", onMessage);
+  // § EVENTS — registered exactly once each
+  app.event('app_home_opened', onAppHomeOpened);
+  app.event('app_mention',     onAppMention);
+  app.event('message',         onMessage);
 
   // § BLOCK ACTIONS
-  // app.action("dismiss_item", onDismissAction);
-
-  // § VIEW SUBMISSIONS
-  // app.view("settings_modal", onSettingsModalSubmit);
-  
+  app.action('calendar',     onCalendarAction);
+  app.action('pending_prs',  onPendingPrsAction);
+  app.action('show_unread',  onShowUnreadAction);
+  app.action('summarize_day', onSummarizeDayAction);
 }
 
+// Export singleton for modules that need it directly
+export const slackApp = getSlackApp();

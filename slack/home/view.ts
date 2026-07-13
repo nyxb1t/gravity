@@ -265,10 +265,13 @@ function getGreeting(): string {
   return hour < 12 ? "Good Morning" : "Good Evening";
 }
 
-function buildGravityHeader(_: HomeViewData): KnownBlock[] {
+function buildGravityHeader(data: HomeViewData): KnownBlock[] {
+  // Use displayName from header if provided; fall back to empty
+  const name = (data as any).__displayName ?? '';
+  const greeting = name ? `👋 ${getGreeting()}, ${name.split(' ')[0]}` : `👋 ${getGreeting()}`;
   return [
     ...buildHeaderBlock({
-      title: `👋 ${getGreeting()}, Jacob`,
+      title: greeting,
       subtitle: "Here's what needs your attention today.",
       emoji: "",
     }),
