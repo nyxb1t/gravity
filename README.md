@@ -317,7 +317,7 @@ Gravity demonstrates:
 ✅ Proactive Workspace Intelligence  
 ✅ Graceful AI Fallbacks
 
-🎬 Demo Video: [Add Demo Link]
+🎬 Demo Video: [https://youtu.be/ClpMUwlQ_B4?si=pehhqqcCbuoj4IvO]
 
 🌐 Railway Deployment: [gravity-production-b956.up.railway.app]
 
