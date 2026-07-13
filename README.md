@@ -319,14 +319,7 @@ Gravity demonstrates:
 
 🎬 Demo Video: [Add Demo Link]
 
----
-
-# 🔗 Links
-
-- 🚀 Devpost Submission: [Add Link]
-- 🎬 Demo Video: [Add Link]
-- 🌐 Railway Deployment: [Add Link]
-- 💻 GitHub Repository: [Add Link]
+🌐 Railway Deployment: [gravity-production-b956.up.railway.app]
 
 ---
 
@@ -366,9 +359,9 @@ Instead of another dashboard, Gravity becomes a workplace copilot.
 
 Built with ❤️ during a hackathon by:
 
-- **Prachi** — AI, Integrations & Infrastructure
-- **[Teammate Name]** — Frontend & User Experience
-- **[Teammate Name]** — Product & Platform
+- **Prachi** — AI & Backend
+- **Garima** — Frontend & User Experience
+- **Sarthak** — MCP Integrations & Infrastructure
 
 ---
 
